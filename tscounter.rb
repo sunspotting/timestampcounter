@@ -1,6 +1,6 @@
 #! /usr/bin/env ruby
-class TimestampProcessor
 
+class TimestampProcessor
   def initialize(f)
     @fp = File.open(f)
     @current_date = ''
@@ -11,11 +11,11 @@ class TimestampProcessor
   def run(num_lines)
     num_lines.times do
       line = @fp.gets
-      if @fp.eof
+      process_line line
+      if @fp.eof # if last line of file, dump last
         puts "%s, %d" % [@last_timestamp, @num_hits]
         break
       end
-      process_line line
     end
   end
 
@@ -35,7 +35,8 @@ class TimestampProcessor
         @last_timestamp = timestamp
       elsif @last_timestamp == timestamp # repeat
         @num_hits += 1
-      else # last match
+      else # not the same 
+        # print last match in cycle
         puts "%s, %d" % [@last_timestamp, @num_hits]
         # start new cycle
         @last_timestamp = timestamp
@@ -63,5 +64,4 @@ end
 exit 0 if error_flag
 
 tsp = TimestampProcessor.new(file_name)
-
 tsp.run num_lines
