@@ -5,10 +5,10 @@ class TimestampProcessor
     @fp = File.open(f)
     @current_date = ''
     @num_hits = 0
+    @last_timestamp = ''
   end
 
   def run(num_lines)
-    counter = 0
     num_lines.times do
       line = @fp.gets
       if @fp.eof
@@ -16,7 +16,6 @@ class TimestampProcessor
         break
       end
       process_line line
-      counter = 1
     end
   end
 
@@ -31,10 +30,14 @@ class TimestampProcessor
         hour += 12
       end
       timestamp = '%s,%02d:%02d' % [@current_date, hour, min]
-      if @last_timestamp == timestamp
+      if @last_timestamp.empty? # first time matching
         @num_hits += 1
-      else
-        puts "%s, %d" % [timestamp, @num_hits]
+        @last_timestamp = timestamp
+      elsif @last_timestamp == timestamp # repeat
+        @num_hits += 1
+      else # last match
+        puts "%s, %d" % [@last_timestamp, @num_hits]
+        # start new cycle
         @last_timestamp = timestamp
         @num_hits = 1
       end
