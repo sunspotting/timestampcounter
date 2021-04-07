@@ -1,19 +1,22 @@
 #! /usr/bin/env ruby
 class TimestampProcessor
-  attr_accessor :current_date, :fp, :num_hits
 
   def initialize(f)
     @fp = File.open(f)
     @current_date = ''
+    @num_hits = 0
   end
 
   def run(num_lines)
     counter = 0
     num_lines.times do
       line = @fp.gets
-      break if @fp.eof
+      if @fp.eof
+        puts "%s, %d" % [@last_timestamp, @num_hits]
+        break
+      end
       process_line line
-      counter += 1
+      counter = 1
     end
   end
 
@@ -31,9 +34,9 @@ class TimestampProcessor
       if @last_timestamp == timestamp
         @num_hits += 1
       else
-        puts timestamp
+        puts "%s, %d" % [timestamp, @num_hits]
         @last_timestamp = timestamp
-        @num_hits = 0
+        @num_hits = 1
       end
     else
       # Lines that don't match are ignored
