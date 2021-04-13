@@ -13,8 +13,7 @@ module TimeSeriesProcessor
 
     exit 0 if error_flag
 
-    tsp = TimestampProcessor.new(file_name)
-    tsp.run 
+    TimestampProcessor.new(file_name).run 
   end
 
   class TimestampProcessor
@@ -43,13 +42,12 @@ module TimeSeriesProcessor
 
     def process_line(line)
       case line 
-      in /:(\d\d\d\d)-(\d\d)-(\d\d)_.+:/
+      in /:(\d\d\d\d)-(\d\d)-(\d\d)_.+:/    # date
         puts "%s, %d" % [@current_date, @num_hits_day] unless first_time?
-        (a,b,c) = [$1,$2,$3].map(&:to_i)
-        @current_date = '%4d-%02d-%02d' % [a,b,c]
+        @current_date = '%4d-%02d-%02d' % [$1,$2,$3].map(&:to_i)
         @num_hits_day = 0
         @last_date = @current_date
-      in /(\d\d):(\d\d)_(.M)/
+      in /(\d\d):(\d\d)_(.M)/               # time
         @num_hits_day += 1
         @num_hits_total += 1
       else
