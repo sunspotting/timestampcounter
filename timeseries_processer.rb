@@ -23,7 +23,6 @@ module TimeSeriesProcessor
       @current_date = nil
       @num_hits_day = 0
       @num_hits_total = 0
-      @last_date = nil
     end
 
     def run
@@ -37,7 +36,7 @@ module TimeSeriesProcessor
     end
 
     def first_time?
-      !@last_date # true when nil
+      !@current_date # true when nil
     end
 
     def process_line(line)
@@ -48,7 +47,6 @@ module TimeSeriesProcessor
                                                                   month: Regexp.last_match(2).to_i,
                                                                   day: Regexp.last_match(3).to_i)
         @num_hits_day = 0
-        @last_date = @current_date
       in /(\d\d):(\d\d)_(.M)/               # time
         @num_hits_day += 1
         @num_hits_total += 1
