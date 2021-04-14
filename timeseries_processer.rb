@@ -23,6 +23,8 @@ module TimeSeriesProcessor
       @current_date = nil
       @num_hits_day = 0
       @num_hits_total = 0
+      @num_days = 0
+      @first_time = true
     end
 
     def run
@@ -32,11 +34,14 @@ module TimeSeriesProcessor
 
         puts format('%<date>s, %<hits>d', date: @current_date, hits: @num_hits_day)
         puts format('Total hits: %<total>d', total: @num_hits_total)
+        puts format('Avg hits/day: %<avg>d', avg: @num_hits_total/@num_days)
       end
     end
 
     def first_time?
-      !@current_date # true when nil
+      ret_val = @first_time
+      @first_time = false
+      return ret_val
     end
 
     def process_line(line)
@@ -47,6 +52,7 @@ module TimeSeriesProcessor
                                                                   month: Regexp.last_match(2).to_i,
                                                                   day: Regexp.last_match(3).to_i)
         @num_hits_day = 0
+        @num_days += 1
       in /(\d\d):(\d\d)_(.M)/               # time
         @num_hits_day += 1
         @num_hits_total += 1
