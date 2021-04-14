@@ -34,7 +34,7 @@ module TimeSeriesProcessor
 
         puts format('%<date>s, %<hits>d', date: @current_date, hits: @num_hits_day)
         puts format('Total hits: %<total>d', total: @num_hits_total)
-        puts format('Avg hits/day: %<avg>d', avg: @num_hits_total/@num_days)
+        puts format('Avg hits/day: %<avg>d', avg: @num_hits_total / @num_days)
       end
     end
 
