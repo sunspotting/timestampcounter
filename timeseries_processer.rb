@@ -41,7 +41,7 @@ module TimeSeriesProcessor
     def first_time?
       ret_val = @first_time
       @first_time = false
-      return ret_val
+      ret_val
     end
 
     def process_line(line)
